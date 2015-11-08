@@ -47,5 +47,5 @@ item = sorted(item)
 
 # In[39]:
 
-item
+print item
 
