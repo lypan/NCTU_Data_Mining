@@ -22,11 +22,11 @@ from sklearn.linear_model import LogisticRegression
 
 # A combination of Word lemmatization + LinearSVC model finally pushes the accuracy score past 80%
 
-traindf = pd.read_json("../train.json")
+traindf = pd.read_json("./train.json")
 traindf['ingredients_clean_string'] = [' , '.join(z).strip() for z in traindf['ingredients']]  
 traindf['ingredients_string'] = [' '.join([WordNetLemmatizer().lemmatize(re.sub('[^A-Za-z]', ' ', line)) for line in lists]).strip() for lists in traindf['ingredients']]       
 
-testdf = pd.read_json("../test.json") 
+testdf = pd.read_json("./test.json") 
 testdf['ingredients_clean_string'] = [' , '.join(z).strip() for z in testdf['ingredients']]
 testdf['ingredients_string'] = [' '.join([WordNetLemmatizer().lemmatize(re.sub('[^A-Za-z]', ' ', line)) for line in lists]).strip() for lists in testdf['ingredients']]       
 
@@ -36,8 +36,11 @@ corpustr = traindf['ingredients_string']
 vectorizertr = TfidfVectorizer(stop_words='english',
                              ngram_range = ( 1 , 1 ),analyzer="word", 
                              max_df = .57 , binary=False , token_pattern=r'\w+' , sublinear_tf=False)
-vectorizertr.get_feature_names()
+
+#vectorizertr.get_feature_names()
 tfidftr=vectorizertr.fit_transform(corpustr).todense()
+
+
 corpusts = testdf['ingredients_string']
 vectorizerts = TfidfVectorizer(stop_words='english')
 tfidfts=vectorizertr.transform(corpusts)
