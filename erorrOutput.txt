@@ -1,0 +1,26 @@
+>>> runfile('/home/gakaza/NCTU_Data_Mining/test.py', wdir=r'/home/gakaza/NCTU_Data_Mining')
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+  File "/usr/lib/python2.7/dist-packages/spyderlib/widgets/externalshell/sitecustomize.py", line 540, in runfile
+    execfile(filename, namespace)
+  File "/home/gakaza/NCTU_Data_Mining/test.py", line 62, in <module>
+    classifier=classifier.fit(predictors_tr,targets_tr)
+  File "/usr/lib/python2.7/dist-packages/sklearn/grid_search.py", line 707, in fit
+    return self._fit(X, y, ParameterGrid(self.param_grid))
+  File "/usr/lib/python2.7/dist-packages/sklearn/grid_search.py", line 493, in _fit
+    for parameters in parameter_iterable
+  File "/usr/lib/pymodules/python2.7/joblib/parallel.py", line 517, in __call__
+    self.dispatch(function, args, kwargs)
+  File "/usr/lib/pymodules/python2.7/joblib/parallel.py", line 312, in dispatch
+    job = ImmediateApply(func, args, kwargs)
+  File "/usr/lib/pymodules/python2.7/joblib/parallel.py", line 136, in __init__
+    self.results = func(*args, **kwargs)
+  File "/usr/lib/python2.7/dist-packages/sklearn/grid_search.py", line 311, in fit_grid_point
+    this_score = clf.score(X_test, y_test)
+  File "/usr/lib/python2.7/dist-packages/sklearn/base.py", line 294, in score
+    return accuracy_score(y, self.predict(X))
+  File "/usr/lib/python2.7/dist-packages/sklearn/metrics/metrics.py", line 1064, in accuracy_score
+    y_type, y_true, y_pred = _check_clf_targets(y_true, y_pred)
+  File "/usr/lib/python2.7/dist-packages/sklearn/metrics/metrics.py", line 123, in _check_clf_targets
+    raise ValueError("{0} is not supported".format(y_type))
+ValueError: unknown is not supported
