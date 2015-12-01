@@ -24,8 +24,8 @@ testdf = pd.read_json("test.json")
 traindf['processed_ingredients'] = traindf.apply(lambda x: [re.sub('-', '_', i.encode('ascii', 'ignore').lower().strip()) for i in x['ingredients']], axis=1)
 testdf['processed_ingredients'] = testdf.apply(lambda x: [re.sub('-', '_', i.encode('ascii', 'ignore').lower().strip()) for i in x['ingredients']], axis=1)
 
-traindf['processed_ingredients_string'] = [','.join(z).strip() for z in traindf['processed_ingredients']] 
-testdf['processed_ingredients_string'] = [','.join(z).strip() for z in testdf['processed_ingredients']] 
+traindf['processed_ingredients_string'] = [','.join(z).strip() for z in traindf['processed_ingredients']]
+testdf['processed_ingredients_string'] = [','.join(z).strip() for z in testdf['processed_ingredients']]
 
 
 # Document term matrix
@@ -60,11 +60,10 @@ param = {}
 # use softmax multi-class classification
 param['objective'] = 'multi:softmax'
 # scale weight of positive examples
-param['eta'] = 0.3
-param['max_depth'] = 25
-param['nthread'] = 8
+param['eta'] = 0.05
+param['max_depth'] = 10
 param['num_class'] = 20
-num_round = 200
+num_round = 100
 # watchlist = [ (xg_train,'train'), (xg_test, 'test') ]
 
 
@@ -95,6 +94,6 @@ with open('predict_result.csv', 'w') as csvfile:
     writer.writeheader()
     for key, value in predict_dict.iteritems():
         writer.writerow({'id': key, 'cuisine': value})
-        
+
 
 print 'finished'
