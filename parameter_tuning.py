@@ -69,12 +69,15 @@ traindf['cuisine_number'] = le.transform(traindf['cuisine'])
 cuisine_label = traindf['cuisine_number']
 
 
-# Tf–idf term
-tfidf_trans = TfidfVectorizer(stop_words='english',
-                             ngram_range = ( 1 , 1 ),analyzer="word",
-                             max_df = .57 , binary=False , token_pattern=r'\w+' , sublinear_tf=False)
+# Document term matrix
+vectorizer = CountVectorizer()
+vectorizer.fit_transform(traindf['processed_ingredients_string'])
+dtm_train = vectorizer.transform(traindf['processed_ingredients_string'])
+dtm_test = vectorizer.transform(testdf['processed_ingredients_string'])
 
-#tfidf_trans = TfidfTransformer()
+
+# Tf–idf term
+tfidf_trans = TfidfTransformer()
 tfidf_train = tfidf_trans.fit_transform(traindf['processed_ingredients_string'])
 tfidf_test = tfidf_trans.fit_transform(testdf['processed_ingredients_string'])
 
@@ -94,56 +97,17 @@ n_iter_search = 20
 random_search = RandomizedSearchCV(clf, param_distributions=param_dist,
                                    n_iter=n_iter_search)
 
+# DTM
 start = time()
-random_search.fit(strain, cuisine_label)
+random_search.fit(dtm_train, cuisine_label)
 print("RandomizedSearchCV took %.2f seconds for %d candidates"
       " parameter settings." % ((time() - start), n_iter_search))
 report(random_search.grid_scores_)
 
+# TF-IDF
+start = time()
+random_search.fit(tfidf_train, cuisine_label)
+print("RandomizedSearchCV took %.2f seconds for %d candidates"
+      " parameter settings." % ((time() - start), n_iter_search))
+report(random_search.grid_scores_)
 
-
-clf = RandomForestClassifier(n_estimators=100)
-label = "RF"
-scores = cross_validation.cross_val_score(clf, strain, cuisine_label, cv=2, scoring='accuracy')
-print("Accuracy: %0.2f (+/- %0.2f) [%s]" % (scores.mean(), scores.std(), label))
-
-scores = cross_validation.cross_val_score(clf, tfidf_train, cuisine_label, cv=2, scoring='accuracy')
-print("Accuracy: %0.2f (+/- %0.2f) [%s]" % (scores.mean(), scores.std(), label))
-
-# Document term matrix
-vectorizer = CountVectorizer()
-vectorizer.fit_transform(traindf['processed_ingredients_string'])
-# print vectorizer.get_feature_names()
-strain = vectorizer.transform(traindf['processed_ingredients_string'])
-# print strain.todense().shape
-stest = vectorizer.transform(testdf['processed_ingredients_string'])
-# print stest.todense().shape
-kf = KFold(n=len(traindf), n_folds=5)
-
-#Random forest
-scores = []
-for train_index, test_index in kf:
-    X_train, X_test = strain[train_index], strain[test_index]
-    y_train, y_test = cuisine_label[train_index], cuisine_label[test_index]
-    alg = RandomForestClassifier(n_estimators=10)
-    alg.fit(X_train, y_train)
-    scores.append(alg.score(X_test, y_test))
-print scores
-scores = []
-for train_index, test_index in kf:
-    X_train, X_test = tfidf_train[train_index], tfidf_train[test_index]
-    y_train, y_test = cuisine_label[train_index], cuisine_label[test_index]
-    alg = RandomForestClassifier(n_estimators=10)
-    alg.fit(X_train, y_train)
-    scores.append(alg.score(X_test, y_test))
-print scores
-
-#SVM
-from sklearn.svm import LinearSVC
-scores = []
-for train_index, test_index in kf:
-    X_train, X_test = strain[train_index], strain[test_index]
-    y_train, y_test = cuisine_label[train_index], cuisine_label[test_index]
-    alg = LinearSVC()
-    alg.fit(X_train, y_train)
-    scores.append(alg.score(X_test, y_test))
