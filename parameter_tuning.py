@@ -78,8 +78,8 @@ dtm_test = vectorizer.transform(testdf['processed_ingredients_string'])
 
 # Tf–idf term
 tfidf_trans = TfidfTransformer()
-tfidf_train = tfidf_trans.fit_transform(traindf['processed_ingredients_string'])
-tfidf_test = tfidf_trans.fit_transform(testdf['processed_ingredients_string'])
+tfidf_train = tfidf_trans.fit_transform(dtm_train)
+tfidf_test = tfidf_trans.fit_transform(dtm_test)
 
 
 clf = RandomForestClassifier()
