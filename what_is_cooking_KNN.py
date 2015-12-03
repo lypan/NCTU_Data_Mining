@@ -52,7 +52,6 @@ testdf['processed_ingredients'] = testdf.apply(lambda x: [re.sub('-', '_', i.enc
 traindf['processed_ingredients_string'] = [','.join(z).strip() for z in traindf['processed_ingredients']]
 testdf['processed_ingredients_string'] = [','.join(z).strip() for z in testdf['processed_ingredients']]
 
-
 '''
 # Map cuisine to integer(start from 0)
 item = set()
@@ -81,10 +80,6 @@ dtm_test = vectorizer.transform(testdf['processed_ingredients_string']) #our tes
 tfidf_trans = TfidfTransformer()
 tfidf_train = tfidf_trans.fit_transform(dtm_train)
 tfidf_test = tfidf_trans.fit_transform(dtm_test)
-
-
-#soft voting code
-# Loading some example data
 
 #Cross-validation test code; need to do random search first
 '''
