@@ -33,3 +33,40 @@ Mean validation score: 0.743 (std: 0.001)
 Parameters: {'n_neighbors': 30, 'weights': 'distance', 'leaf_size': 250, 'algorithm': 'auto'}
 
 finished
+
+------------------------------------------------------------------------------------------------------
+
+
+
+runfile('/home/gakaza/NCTU_Data_Mining/what_is_cooking_KNN.py', wdir='/home/gakaza/NCTU_Data_Mining')
+started
+RandomizedSearchCV took 1980.14 seconds for 30 candidates parameter settings.
+Model with rank: 1
+Mean validation score: 0.650 (std: 0.005)
+Parameters: {'n_neighbors': 8, 'weights': 'distance', 'leaf_size': 118, 'algorithm': 'kd_tree'}
+
+Model with rank: 2
+Mean validation score: 0.650 (std: 0.005)
+Parameters: {'n_neighbors': 11, 'weights': 'distance', 'leaf_size': 182, 'algorithm': 'auto'}
+
+Model with rank: 3
+Mean validation score: 0.649 (std: 0.005)
+Parameters: {'n_neighbors': 9, 'weights': 'distance', 'leaf_size': 166, 'algorithm': 'ball_tree'}
+
+RandomizedSearchCV took 2590.03 seconds for 30 candidates parameter settings.
+Model with rank: 1
+Mean validation score: 0.747 (std: 0.002)
+Parameters: {'n_neighbors': 16, 'weights': 'distance', 'leaf_size': 230, 'algorithm': 'ball_tree'}
+
+Model with rank: 2
+Mean validation score: 0.747 (std: 0.003)
+Parameters: {'n_neighbors': 18, 'weights': 'distance', 'leaf_size': 125, 'algorithm': 'ball_tree'}
+
+Model with rank: 3
+Mean validation score: 0.747 (std: 0.003)
+Parameters: {'n_neighbors': 18, 'weights': 'distance', 'leaf_size': 141, 'algorithm': 'ball_tree'}
+
+finished
+
+--------------------------------------------------------------------------------------------------------
+

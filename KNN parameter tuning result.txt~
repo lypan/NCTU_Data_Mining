@@ -1,0 +1,35 @@
+# -*- coding: utf-8 -*-
+"""
+Created on Thu Dec  3 18:59:45 2015
+
+@author: gakaza
+"""
+
+started
+RandomizedSearchCV took 1899.21 seconds for 30 candidates parameter settings.
+Model with rank: 1
+Mean validation score: 0.649 (std: 0.004)
+Parameters: {'n_neighbors': 10, 'weights': 'distance', 'leaf_size': 175, 'algorithm': 'brute'}
+
+Model with rank: 2
+Mean validation score: 0.649 (std: 0.004)
+Parameters: {'n_neighbors': 10, 'weights': 'distance', 'leaf_size': 85, 'algorithm': 'ball_tree'}
+
+Model with rank: 3
+Mean validation score: 0.649 (std: 0.004)
+Parameters: {'n_neighbors': 10, 'weights': 'distance', 'leaf_size': 244, 'algorithm': 'kd_tree'}
+
+RandomizedSearchCV took 2627.84 seconds for 30 candidates parameter settings.
+Model with rank: 1
+Mean validation score: 0.745 (std: 0.001)
+Parameters: {'n_neighbors': 10, 'weights': 'distance', 'leaf_size': 188, 'algorithm': 'ball_tree'}
+
+Model with rank: 2
+Mean validation score: 0.745 (std: 0.001)
+Parameters: {'n_neighbors': 10, 'weights': 'distance', 'leaf_size': 68, 'algorithm': 'kd_tree'}
+
+Model with rank: 3
+Mean validation score: 0.743 (std: 0.001)
+Parameters: {'n_neighbors': 30, 'weights': 'distance', 'leaf_size': 250, 'algorithm': 'auto'}
+
+finished

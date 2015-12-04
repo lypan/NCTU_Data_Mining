@@ -114,10 +114,10 @@ print scores
 from sklearn.neighbors import KNeighborsClassifier
 clf = KNeighborsClassifier()
 # specify parameters and distributions to sample from
-param_dist = {"n_neighbors": [10, 30, 50, 70],
-              "weights": ["uniform", "distance"],
-              "algorithm": ["auto", "ball_tree", "kd_tree", "brute"],
-              "leaf_size": sp_randint(50, 300)}
+param_dist = {"n_neighbors": sp_randint(15, 22),
+              "weights": ["distance"],
+              "algorithm": ["auto", "ball_tree", "kd_tree"],
+              "leaf_size": sp_randint(100, 250)}
 
 # run randomized search
 n_iter_search = 30
