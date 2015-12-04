@@ -70,3 +70,34 @@ finished
 
 --------------------------------------------------------------------------------------------------------
 
+
+started
+RandomizedSearchCV took 1946.77 seconds for 30 candidates parameter settings.
+Model with rank: 1
+Mean validation score: 0.648 (std: 0.003)
+Parameters: {'n_neighbors': 16, 'weights': 'distance', 'leaf_size': 178, 'algorithm': 'ball_tree'}
+
+Model with rank: 2
+Mean validation score: 0.648 (std: 0.003)
+Parameters: {'n_neighbors': 16, 'weights': 'distance', 'leaf_size': 244, 'algorithm': 'ball_tree'}
+
+Model with rank: 3
+Mean validation score: 0.648 (std: 0.003)
+Parameters: {'n_neighbors': 16, 'weights': 'distance', 'leaf_size': 129, 'algorithm': 'kd_tree'}
+
+RandomizedSearchCV took 2563.56 seconds for 30 candidates parameter settings.
+Model with rank: 1
+Mean validation score: 0.747 (std: 0.002)
+Parameters: {'n_neighbors': 16, 'weights': 'distance', 'leaf_size': 105, 'algorithm': 'auto'}
+
+Model with rank: 2
+Mean validation score: 0.747 (std: 0.002)
+Parameters: {'n_neighbors': 16, 'weights': 'distance', 'leaf_size': 222, 'algorithm': 'kd_tree'}
+
+Model with rank: 3
+Mean validation score: 0.747 (std: 0.002)
+Parameters: {'n_neighbors': 17, 'weights': 'distance', 'leaf_size': 211, 'algorithm': 'ball_tree'}
+
+finished
+
+
