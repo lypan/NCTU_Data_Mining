@@ -5,17 +5,26 @@ Created on Fri Dec  4 01:04:42 2015
 @author: liangyupan
 """
 #%%
+import re
+import csv
 import random
 import pandas as pd
 import numpy as np
 import xgboost as xgb
+from sklearn import preprocessing
 from sklearn.decomposition import PCA
 from sklearn.cross_validation import StratifiedKFold
+from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.feature_extraction.text import TfidfTransformer
 from sklearn.preprocessing import LabelEncoder
 from sklearn.preprocessing import StandardScaler
+from sklearn.linear_model import LogisticRegression
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.ensemble import ExtraTreesClassifier
+from sklearn.ensemble import GradientBoostingClassifier
+from sklearn.naive_bayes import MultinomialNB
+from sklearn.neighbors import KNeighborsClassifier
+
 
 #%%#################### original data
 # read train and test data from json
@@ -46,22 +55,21 @@ vectorizer = CountVectorizer()
 dtm_train = vectorizer.fit_transform(traindf['processed_ingredients_string']).toarray()
 dtm_test = vectorizer.transform(testdf['processed_ingredients_string']).toarray()
 
-random.shuffle(dtm_train)
 
 # tf-idf transforming
-tfidf_trans = TfidfTransformer()
-tdif_train = tfidf_trans.fit_transform(dtm_train).toarray()
-tdif_test = tfidf_trans.transform(dtm_test).toarray()
+# tfidf_trans = TfidfTransformer()
+# tfidf_train = tfidf_trans.fit_transform(dtm_train).toarray()
+# tfidf_test = tfidf_trans.transform(dtm_test).toarray()
 
-# 0-1 standardization
-std_trans = StandardScaler()
-std_train = std_trans.fit_transform(dtm_train)
-std_test = std_trans.transform(dtm_test)
-
-# PCA
-pca = PCA(n_components=1000)
-pca_train = pca.fit(dtm_train).transform(dtm_train)
-pca_test = pca.transform(dtm_test)
+## 0-1 standardization
+#std_trans = StandardScaler()
+#std_train = std_trans.fit_transform(dtm_train)
+#std_test = std_trans.transform(dtm_test)
+#
+## PCA
+#pca = PCA(n_components=1000)
+#pca_train = pca.fit(dtm_train).transform(dtm_train)
+#pca_test = pca.transform(dtm_test)
 
 
 #%%####################level 1
@@ -70,13 +78,22 @@ spilt_number = 20000;
 n_folds = 5;
 
 clf1 = RandomForestClassifier(n_estimators = 100, criterion = 'gini')
-clf2 = RandomForestClassifier(n_estimators = 100, criterion = 'gini')
+# clf2 = RandomForestClassifier(n_estimators = 100, criterion = 'gini')
 clf3 = ExtraTreesClassifier(n_estimators = 100 * 2, criterion = 'gini')
-clf4 = ExtraTreesClassifier(n_estimators = 100 * 2, criterion = 'gini')
-clf5 = GradientBoostingClassifier(n_estimators = 100)
-clf6 = GradientBoostingClassifier(n_estimators = 100)
+# clf4 = ExtraTreesClassifier(n_estimators = 100 * 2, criterion = 'gini')
+clf5 = KNeighborsClassifier(n_neighbors = 380, metric = 'cosine', algorithm = 'brute')
+# clf6 = KNeighborsClassifier(n_neighbors = 380, metric = 'cosine', algorithm = 'brute')
 clf7 = MultinomialNB()
-clf8 = MultinomialNB()
+# clf8 = MultinomialNB()
+num_rounds = 200
+param = {
+   'objective':'multi:softmax',
+   'eta':0.05,
+   'max_depth':50,
+   'num_class':20
+}
+clf9 = xgb.train(param, xgb.DMatrix(dtm_train[:spilt_number], cuisine_label[:spilt_number]), num_rounds)
+# clf10 = xgb.train(param, xgb.DMatrix(tfidf_train[:spilt_number], cuisine_label[:spilt_number]), num_rounds)
 
 
 
@@ -85,49 +102,75 @@ clf8 = MultinomialNB()
 skf = list(StratifiedKFold(cuisine_label, n_folds))
 
 
-#rf on raw
+#rf on dtm
 clf1.fit(dtm_train[:spilt_number], cuisine_label[:spilt_number])
 train_pred1 = clf1.predict(dtm_train[spilt_number:])
 test_pred1 = clf1.predict(dtm_test)
 #rf on tfidf
-clf2.fit(tfidf_train[:spilt_number], cuisine_label[:spilt_number])
-train_pred2 = clf2.predict(tfidf_train[spilt_number:])
-test_pred2 = clf2.predict(dtm_test)
-#ex on raw
+# clf2.fit(tfidf_train[:spilt_number], cuisine_label[:spilt_number])
+# train_pred2 = clf2.predict(tfidf_train[spilt_number:])
+# test_pred2 = clf2.predict(tfidf_test)
+#ex on dtm
 clf3.fit(dtm_train[:spilt_number], cuisine_label[:spilt_number])
 train_pred3 = clf3.predict(dtm_train[spilt_number:])
 test_pred3 = clf3.predict(dtm_test)
 #ex on tfidf
-clf4.fit(tfidf_train[:spilt_number], cuisine_label[:spilt_number])
-train_pred4 = clf4.predict(tfidf_train[spilt_number:])
-test_pred4 = clf4.predict(dtm_test)
-#gb on raw
+# clf4.fit(tfidf_train[:spilt_number], cuisine_label[:spilt_number])
+# train_pred4 = clf4.predict(tfidf_train[spilt_number:])
+# test_pred4 = clf4.predict(tfidf_test)
+#%%
+#knn on dtm
 clf5.fit(dtm_train[:spilt_number], cuisine_label[:spilt_number])
 train_pred5 = clf5.predict(dtm_train[spilt_number:])
 test_pred5 = clf5.predict(dtm_test)
-#gb on tfidf
-clf6.fit(tfidf_train[:spilt_number], cuisine_label[:spilt_number])
-train_pred6 = clf6.predict(tfidf_train[spilt_number:])
-test_pred6 = clf6.predict(dtm_test)
-#mb on raw
+# #knn on tfidf
+# clf6.fit(tfidf_train[:spilt_number], cuisine_label[:spilt_number])
+# train_pred6 = clf6.predict(tfidf_train[spilt_number:])
+# test_pred6 = clf6.predict(tfidf_test)
+#mb on dtm
 clf7.fit(dtm_train[:spilt_number], cuisine_label[:spilt_number])
 train_pred7 = clf7.predict(dtm_train[spilt_number:])
 test_pred7 = clf7.predict(dtm_test)
 #mb on tfidf
-clf8.fit(tfidf_train[:spilt_number], cuisine_label[:spilt_number])
-train_pred8 = clf8.predict(tfidf_train[spilt_number:])
-test_pred8 = clf8.predict(dtm_test)
+# clf8.fit(tfidf_train[:spilt_number], cuisine_label[:spilt_number])
+# train_pred8 = clf8.predict(tfidf_train[spilt_number:])
+# test_pred8 = clf8.predict(tfidf_test)
+#xgb on dtm
+train_pred9 = clf9.predict(xgb.DMatrix(dtm_train[spilt_number:]))
+test_pred9 = clf9.predict(xgb.DMatrix(dtm_test))
+#xgb on tfidf
+# train_pred10 = clf10.predict(xgb.DMatrix(tfidf_train[spilt_number:]))
+# test_pred10 = clf10.predict(xgb.DMatrix(tfidf_test))
+#%%
+# blend_train = np.column_stack((train_pred1, train_pred2, train_pred3, train_pred4, train_pred5, train_pred6, train_pred7, train_pred8, train_pred9, train_pred10))
+# blend_test = np.column_stack((test_pred1, test_pred2, test_pred3, test_pred4, test_pred5, test_pred6, test_pred7, test_pred8, test_pred9, test_pred10))
 
-blend_train = np.hstack((train_pred1, train_pred2, train_pred3, train_pred4, train_pred5, train_pred6, train_pred7, train_pred8))
-blend_test = np.hstack((test_pred1, test_pred2, test_pred3, test_pred4, test_pred5, test_pred6, test_pred7, test_pred8))
+blend_train = np.column_stack((train_pred1, train_pred3, train_pred5, train_pred7, train_pred9))
+blend_test = np.column_stack((test_pred1, test_pred3, test_pred5, test_pred7, test_pred9))
+
 #%%####################level 2
-bclf = LogisticRegression()
-bclf.fit(blend_train, cuisine_label[spilt_number:])
-predict_result = bclf.predict(blend_test)
+param = {
+    'objective':'multi:softmax',
+    'eta':0.05,
+    'max_depth':50,
+    'num_class':20
+}
+evals_result = {}
+num_rounds = 200
+
+l2_row_num = blend_train.shape[0]
+l2_row_spl = int(l2_row_num * 0.8)
 
 
+dtrain = xgb.DMatrix(blend_train[:l2_row_spl], cuisine_label[spilt_number:spilt_number + l2_row_spl])
+deval = xgb.DMatrix(blend_train[l2_row_spl:], cuisine_label[spilt_number + l2_row_spl:])
+dtest = xgb.DMatrix(blend_test)
+watchlist = [(dtrain,'train'), (deval,'eval')]
+
+xgbclf = xgb.train(param, dtrain, num_rounds, watchlist, early_stopping_rounds=50, evals_result=evals_result)
+predict_result = xgbclf.predict(dtest, ntree_limit=xgbclf.best_iteration)
 #%%####################write csv
-testdf['cuisine'] = le.inverse_transform(predict_result)
+testdf['cuisine'] = le.inverse_transform(predict_result.astype(np.int32))
 predict_dict = dict(zip(testdf['id'], testdf['cuisine']) )
 with open('predict_result_ensemble.csv', 'w') as csvfile:
     fieldnames = ['id', 'cuisine']

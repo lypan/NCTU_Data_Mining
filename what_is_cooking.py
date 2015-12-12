@@ -56,14 +56,20 @@ dtest = xgb.DMatrix(stest)
 
 
 # set xgboost parameter
-param = {}
+# param = {
+#     'objective':'multi:softmax',
+#     'eta':0.05,
+#     'max_depth':20,
+#     'num_class':20,
+#     'num_round':200
+# }
 # use softmax multi-class classification
 param['objective'] = 'multi:softmax'
 # scale weight of positive examples
 param['eta'] = 0.05
-param['max_depth'] = 10
+param['max_depth'] = 20
 param['num_class'] = 20
-num_round = 100
+num_round = 200
 # watchlist = [ (xg_train,'train'), (xg_test, 'test') ]
 
 
