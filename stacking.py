@@ -5,25 +5,26 @@ Created on Fri Dec  4 01:04:42 2015
 @author: liangyupan
 """
 #%%
-import re
-import csv
-import random
-import pandas as pd
-import numpy as np
-import xgboost as xgb
 from sklearn import preprocessing
-from sklearn.decomposition import PCA
 from sklearn.cross_validation import StratifiedKFold
-from sklearn.feature_extraction.text import CountVectorizer
-from sklearn.feature_extraction.text import TfidfTransformer
-from sklearn.preprocessing import LabelEncoder
-from sklearn.preprocessing import StandardScaler
-from sklearn.linear_model import LogisticRegression
-from sklearn.ensemble import RandomForestClassifier
+from sklearn.decomposition import PCA
 from sklearn.ensemble import ExtraTreesClassifier
 from sklearn.ensemble import GradientBoostingClassifier
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.feature_extraction.text import CountVectorizer
+from sklearn.feature_extraction.text import TfidfTransformer
+from sklearn.linear_model import LogisticRegression
 from sklearn.naive_bayes import MultinomialNB
 from sklearn.neighbors import KNeighborsClassifier
+from sklearn.preprocessing import LabelEncoder
+from sklearn.preprocessing import StandardScaler
+from sklearn.svm import LinearSVC
+import csv
+import numpy as np
+import pandas as pd
+import random
+import re
+import xgboost as xgb
 
 
 #%%#################### original data
@@ -77,23 +78,31 @@ dtm_test = vectorizer.transform(testdf['processed_ingredients_string']).toarray(
 spilt_number = 20000;
 n_folds = 5;
 
-clf1 = RandomForestClassifier(n_estimators = 100, criterion = 'gini')
+
+clf1 = RandomForestClassifier(bootstrap=False, min_samples_leaf=1, n_estimators=275, min_samples_split=3, criterion='gini', max_features=43, max_depth=None)
 # clf2 = RandomForestClassifier(n_estimators = 100, criterion = 'gini')
-clf3 = ExtraTreesClassifier(n_estimators = 100 * 2, criterion = 'gini')
+clf3 = ExtraTreesClassifier(max_features=6, n_estimators=100, criterion='gini', max_depth=None)
 # clf4 = ExtraTreesClassifier(n_estimators = 100 * 2, criterion = 'gini')
-clf5 = KNeighborsClassifier(n_neighbors = 380, metric = 'cosine', algorithm = 'brute')
+clf5 = KNeighborsClassifier(n_neighbors=16, weights='distance', leaf_size=178, algorithm='ball_tree')
 # clf6 = KNeighborsClassifier(n_neighbors = 380, metric = 'cosine', algorithm = 'brute')
-clf7 = MultinomialNB()
+clf7 = MultinomialNB(alpha=0.4, fit_prior=True)
 # clf8 = MultinomialNB()
 num_rounds = 200
 param = {
    'objective':'multi:softmax',
-   'eta':0.05,
-   'max_depth':50,
-   'num_class':20
+   'eta':0.3,
+   'max_depth':24,
+   'num_class':20,
+   'colsample_bytree':0.3,
+   'min_child_weight':1
 }
 clf9 = xgb.train(param, xgb.DMatrix(dtm_train[:spilt_number], cuisine_label[:spilt_number]), num_rounds)
 # clf10 = xgb.train(param, xgb.DMatrix(tfidf_train[:spilt_number], cuisine_label[:spilt_number]), num_rounds)
+clf11 = LinearSVC(penalty='l2', C=0.2, dual=False)
+# clf12 = LinearSVC()
+clf13 = LogisticRegression(penalty='l2', C=1, dual=False)
+# clf14 = LogisticRegression()
+
 
 
 
@@ -141,19 +150,28 @@ test_pred9 = clf9.predict(xgb.DMatrix(dtm_test))
 #xgb on tfidf
 # train_pred10 = clf10.predict(xgb.DMatrix(tfidf_train[spilt_number:]))
 # test_pred10 = clf10.predict(xgb.DMatrix(tfidf_test))
+clf11.fit(dtm_train[:spilt_number], cuisine_label[:spilt_number])
+train_pred11 = clf11.predict(dtm_train[spilt_number:])
+test_pred11 = clf11.predict(dtm_test)
+
+clf13.fit(dtm_train[:spilt_number], cuisine_label[:spilt_number])
+train_pred13 = clf13.predict(dtm_train[spilt_number:])
+test_pred13 = clf13.predict(dtm_test)
 #%%
 # blend_train = np.column_stack((train_pred1, train_pred2, train_pred3, train_pred4, train_pred5, train_pred6, train_pred7, train_pred8, train_pred9, train_pred10))
 # blend_test = np.column_stack((test_pred1, test_pred2, test_pred3, test_pred4, test_pred5, test_pred6, test_pred7, test_pred8, test_pred9, test_pred10))
 
-blend_train = np.column_stack((train_pred1, train_pred3, train_pred5, train_pred7, train_pred9))
-blend_test = np.column_stack((test_pred1, test_pred3, test_pred5, test_pred7, test_pred9))
+blend_train = np.column_stack((train_pred1, train_pred3, train_pred5, train_pred7, train_pred9, train_pred11, train_pred13))
+blend_test = np.column_stack((test_pred1, test_pred3, test_pred5, test_pred7, test_pred9, test_pred11, test_pred13))
 
 #%%####################level 2
 param = {
-    'objective':'multi:softmax',
-    'eta':0.05,
-    'max_depth':50,
-    'num_class':20
+   'objective':'multi:softmax',
+   'eta':0.3,
+   'max_depth':24,
+   'num_class':20,
+   'colsample_bytree':0.3,
+   'min_child_weight':1
 }
 evals_result = {}
 num_rounds = 200

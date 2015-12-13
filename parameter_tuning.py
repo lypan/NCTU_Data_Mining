@@ -18,11 +18,13 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.ensemble import AdaBoostClassifier
 from sklearn.ensemble import GradientBoostingClassifier
 from sklearn.svm import LinearSVC
+from sklearn.linear_model import LogisticRegression
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.svm import SVC
 from scipy.stats import randint as sp_randint
 from sklearn.ensemble import VotingClassifier
+from sklearn.naive_bayes import MultinomialNB
 from time import time
 import pandas as pd
 import pickle
@@ -31,6 +33,7 @@ import xgboost as xgb
 import re
 import csv
 from math import sqrt
+#%%
 
 # Utility function to report best scores
 def report(grid_scores, n_top=3):
@@ -44,7 +47,6 @@ def report(grid_scores, n_top=3):
         print("")
 
 
-print 'started'
 # read train and test data from json
 traindf = pd.read_json("train.json")
 testdf = pd.read_json("test.json")
@@ -81,7 +83,7 @@ tfidf_trans = TfidfTransformer()
 tfidf_train = tfidf_trans.fit_transform(dtm_train)
 tfidf_test = tfidf_trans.fit_transform(dtm_test)
 
-
+#%%
 clf = RandomForestClassifier()
 # specify parameters and distributions to sample from
 param_dist = {"n_estimators": [50, 75, 100],
@@ -111,3 +113,77 @@ print("RandomizedSearchCV took %.2f seconds for %d candidates"
       " parameter settings." % ((time() - start), n_iter_search))
 report(random_search.grid_scores_)
 
+#%%
+clf = MultinomialNB()
+# specify parameters and distributions to sample from
+param_dist = {"alpha": [0, 0.2, 0.4, 0.6, 0.8, 1],
+              "fit_prior": [True, False]}
+
+# run randomized search
+n_iter_search = 12
+random_search = RandomizedSearchCV(clf, param_distributions=param_dist,
+                                   n_iter=n_iter_search)
+
+# DTM
+start = time()
+random_search.fit(dtm_train, cuisine_label)
+print("RandomizedSearchCV took %.2f seconds for %d candidates"
+      " parameter settings." % ((time() - start), n_iter_search))
+report(random_search.grid_scores_)
+
+# TF-IDF
+start = time()
+random_search.fit(tfidf_train, cuisine_label)
+print("RandomizedSearchCV took %.2f seconds for %d candidates"
+      " parameter settings." % ((time() - start), n_iter_search))
+report(random_search.grid_scores_)
+
+#%%
+clf = LinearSVC()
+# specify parameters and distributions to sample from
+param_dist = {"C": [0.2, 0.4, 0.6, 0.8, 1, 1.5, 2, 4 ,8],
+              "penalty": ["l2"],
+              "dual":[True, False]}
+# run randomized search
+n_iter_search = 18
+random_search = RandomizedSearchCV(clf, param_distributions=param_dist,
+                                   n_iter=n_iter_search)
+
+# DTM
+start = time()
+random_search.fit(dtm_train, cuisine_label)
+print("RandomizedSearchCV took %.2f seconds for %d candidates"
+      " parameter settings." % ((time() - start), n_iter_search))
+report(random_search.grid_scores_)
+
+# TF-IDF
+start = time()
+random_search.fit(tfidf_train, cuisine_label)
+print("RandomizedSearchCV took %.2f seconds for %d candidates"
+      " parameter settings." % ((time() - start), n_iter_search))
+report(random_search.grid_scores_)
+
+#%%
+clf = LogisticRegression()
+# specify parameters and distributions to sample from
+param_dist = {"C": [0.2, 0.4, 0.6, 0.8, 1, 1.5, 2, 4, 8],
+              "penalty": [ "l2"],
+              "dual":[True, False]}
+# run randomized search
+n_iter_search = 18
+random_search = RandomizedSearchCV(clf, param_distributions=param_dist,
+                                   n_iter=n_iter_search)
+
+# DTM
+start = time()
+random_search.fit(dtm_train, cuisine_label)
+print("RandomizedSearchCV took %.2f seconds for %d candidates"
+      " parameter settings." % ((time() - start), n_iter_search))
+report(random_search.grid_scores_)
+
+# TF-IDF
+start = time()
+random_search.fit(tfidf_train, cuisine_label)
+print("RandomizedSearchCV took %.2f seconds for %d candidates"
+      " parameter settings." % ((time() - start), n_iter_search))
+report(random_search.grid_scores_)
