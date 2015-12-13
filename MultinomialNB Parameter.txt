@@ -1,0 +1,26 @@
+MultinomialNB Parameter
+RandomizedSearchCV took 5.54 seconds for 36 candidates parameter settings.
+Model with rank: 1
+Mean validation score: 0.726 (std: 0.001)
+Parameters: {'alpha': 0.4, 'fit_prior': True}
+
+Model with rank: 2
+Mean validation score: 0.726 (std: 0.002)
+Parameters: {'alpha': 0.6, 'fit_prior': True}
+
+Model with rank: 3
+Mean validation score: 0.725 (std: 0.002)
+Parameters: {'alpha': 0.8, 'fit_prior': True}
+
+RandomizedSearchCV took 5.47 seconds for 36 candidates parameter settings.
+Model with rank: 1
+Mean validation score: 0.734 (std: 0.001)
+Parameters: {'alpha': 0.05, 'fit_prior': True}
+
+Model with rank: 2
+Mean validation score: 0.732 (std: 0.000)
+Parameters: {'alpha': 0.01, 'fit_prior': True}
+
+Model with rank: 3
+Mean validation score: 0.731 (std: 0.001)
+Parameters: {'alpha': 0.6, 'fit_prior': False}

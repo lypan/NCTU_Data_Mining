@@ -4,7 +4,8 @@ Created on Tue Dec  1 15:00:35 2015
 
 @author: liangyupan
 """
-
+from sklearn.decomposition import PCA
+from sklearn.preprocessing import StandardScaler
 from sklearn import preprocessing
 from operator import itemgetter
 from sklearn import cross_validation
@@ -23,7 +24,6 @@ from sklearn.tree import DecisionTreeClassifier
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.svm import SVC
 from scipy.stats import randint as sp_randint
-from sklearn.ensemble import VotingClassifier
 from sklearn.naive_bayes import MultinomialNB
 from time import time
 import pandas as pd
@@ -72,55 +72,55 @@ cuisine_label = traindf['cuisine_number']
 
 
 # Document term matrix
-vectorizer = CountVectorizer()
+vectorizer = CountVectorizer(max_features = 2000)
 vectorizer.fit_transform(traindf['processed_ingredients_string'])
-dtm_train = vectorizer.transform(traindf['processed_ingredients_string'])
-dtm_test = vectorizer.transform(testdf['processed_ingredients_string'])
+dtm_train = vectorizer.transform(traindf['processed_ingredients_string']).toarray()
+dtm_test = vectorizer.transform(testdf['processed_ingredients_string']).toarray()
 
 
 # Tf–idf term
 tfidf_trans = TfidfTransformer()
-tfidf_train = tfidf_trans.fit_transform(dtm_train)
-tfidf_test = tfidf_trans.fit_transform(dtm_test)
+tfidf_train = tfidf_trans.fit_transform(dtm_train).toarray()
+tfidf_test = tfidf_trans.fit_transform(dtm_test).toarray()
 
 #%%
-clf = RandomForestClassifier()
-# specify parameters and distributions to sample from
-param_dist = {"n_estimators": [50, 75, 100],
-              "max_depth": [3, None],
-              "max_features": sp_randint(57, 69),
-              "min_samples_split": sp_randint(1, 11),
-              "min_samples_leaf": sp_randint(1, 11),
-              "bootstrap": [True, False],
-              "criterion": ["gini", "entropy"]}
-
-# run randomized search
-n_iter_search = 20
-random_search = RandomizedSearchCV(clf, param_distributions=param_dist,
-                                   n_iter=n_iter_search)
-
-# DTM
-start = time()
-random_search.fit(dtm_train, cuisine_label)
-print("RandomizedSearchCV took %.2f seconds for %d candidates"
-      " parameter settings." % ((time() - start), n_iter_search))
-report(random_search.grid_scores_)
-
-# TF-IDF
-start = time()
-random_search.fit(tfidf_train, cuisine_label)
-print("RandomizedSearchCV took %.2f seconds for %d candidates"
-      " parameter settings." % ((time() - start), n_iter_search))
-report(random_search.grid_scores_)
+#clf = RandomForestClassifier()
+## specify parameters and distributions to sample from
+#param_dist = {"n_estimators": [50, 75, 100],
+#              "max_depth": [3, None],
+#              "max_features": sp_randint(57, 69),
+#              "min_samples_split": sp_randint(1, 11),
+#              "min_samples_leaf": sp_randint(1, 11),
+#              "bootstrap": [True, False],
+#              "criterion": ["gini", "entropy"]}
+#
+## run randomized search
+#n_iter_search = 20
+#random_search = RandomizedSearchCV(clf, param_distributions=param_dist,
+#                                   n_iter=n_iter_search)
+#
+## DTM
+#start = time()
+#random_search.fit(dtm_train, cuisine_label)
+#print("RandomizedSearchCV took %.2f seconds for %d candidates"
+#      " parameter settings." % ((time() - start), n_iter_search))
+#report(random_search.grid_scores_)
+#
+## TF-IDF
+#start = time()
+#random_search.fit(tfidf_train, cuisine_label)
+#print("RandomizedSearchCV took %.2f seconds for %d candidates"
+#      " parameter settings." % ((time() - start), n_iter_search))
+#report(random_search.grid_scores_)
 
 #%%
 clf = MultinomialNB()
 # specify parameters and distributions to sample from
-param_dist = {"alpha": [0, 0.2, 0.4, 0.6, 0.8, 1],
+param_dist = {"alpha": [0, 0.01, 0.05, 0.1, 0.2, 0.4, 0.6, 0.8, 1, 1.5, 2, 4, 8, 16, 32, 64, 128, 256],
               "fit_prior": [True, False]}
 
 # run randomized search
-n_iter_search = 12
+n_iter_search = 36
 random_search = RandomizedSearchCV(clf, param_distributions=param_dist,
                                    n_iter=n_iter_search)
 
@@ -143,9 +143,10 @@ clf = LinearSVC()
 # specify parameters and distributions to sample from
 param_dist = {"C": [0.2, 0.4, 0.6, 0.8, 1, 1.5, 2, 4 ,8],
               "penalty": ["l2"],
-              "dual":[True, False]}
+              "dual":[True, False],
+              "tol":[1e-2, 1e-3, 1e-4]}
 # run randomized search
-n_iter_search = 18
+n_iter_search = 54
 random_search = RandomizedSearchCV(clf, param_distributions=param_dist,
                                    n_iter=n_iter_search)
 
@@ -168,9 +169,10 @@ clf = LogisticRegression()
 # specify parameters and distributions to sample from
 param_dist = {"C": [0.2, 0.4, 0.6, 0.8, 1, 1.5, 2, 4, 8],
               "penalty": [ "l2"],
-              "dual":[True, False]}
+              "dual":[True, False],
+              "tol":[1e-2, 1e-3, 1e-4]}
 # run randomized search
-n_iter_search = 18
+n_iter_search = 54
 random_search = RandomizedSearchCV(clf, param_distributions=param_dist,
                                    n_iter=n_iter_search)
 

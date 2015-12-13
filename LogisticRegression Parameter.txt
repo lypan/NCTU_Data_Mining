@@ -1,0 +1,26 @@
+LogisticRegression Parameter
+RandomizedSearchCV took 2002.29 seconds for 54 candidates parameter settings.
+Model with rank: 1
+Mean validation score: 0.781 (std: 0.000)
+Parameters: {'penalty': 'l2', 'C': 1, 'tol': 0.0001, 'dual': False}
+
+Model with rank: 2
+Mean validation score: 0.781 (std: 0.001)
+Parameters: {'penalty': 'l2', 'C': 1, 'tol': 0.001, 'dual': False}
+
+Model with rank: 3
+Mean validation score: 0.781 (std: 0.000)
+Parameters: {'penalty': 'l2', 'C': 1, 'tol': 0.001, 'dual': True}
+
+RandomizedSearchCV took 699.05 seconds for 54 candidates parameter settings.
+Model with rank: 1
+Mean validation score: 0.786 (std: 0.001)
+Parameters: {'penalty': 'l2', 'C': 8, 'tol': 0.01, 'dual': False}
+
+Model with rank: 2
+Mean validation score: 0.786 (std: 0.001)
+Parameters: {'penalty': 'l2', 'C': 4, 'tol': 0.0001, 'dual': True}
+
+Model with rank: 3
+Mean validation score: 0.786 (std: 0.001)
+Parameters: {'penalty': 'l2', 'C': 4, 'tol': 0.01, 'dual': False}

@@ -1,0 +1,26 @@
+LinearSVC Parameter
+RandomizedSearchCV took 929.98 seconds for 54 candidates parameter settings.
+Model with rank: 1
+Mean validation score: 0.781 (std: 0.001)
+Parameters: {'penalty': 'l2', 'C': 0.2, 'tol': 0.0001, 'dual': False}
+
+Model with rank: 2
+Mean validation score: 0.781 (std: 0.001)
+Parameters: {'penalty': 'l2', 'C': 0.2, 'tol': 0.01, 'dual': True}
+
+Model with rank: 3
+Mean validation score: 0.781 (std: 0.001)
+Parameters: {'penalty': 'l2', 'C': 0.2, 'tol': 0.001, 'dual': True}
+
+RandomizedSearchCV took 316.85 seconds for 54 candidates parameter settings.
+Model with rank: 1
+Mean validation score: 0.788 (std: 0.001)
+Parameters: {'penalty': 'l2', 'C': 0.6, 'tol': 0.01, 'dual': False}
+
+Model with rank: 2
+Mean validation score: 0.788 (std: 0.001)
+Parameters: {'penalty': 'l2', 'C': 0.4, 'tol': 0.001, 'dual': False}
+
+Model with rank: 3
+Mean validation score: 0.788 (std: 0.001)
+Parameters: {'penalty': 'l2', 'C': 0.4, 'tol': 0.0001, 'dual': False}
