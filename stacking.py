@@ -24,10 +24,12 @@ import numpy as np
 import pandas as pd
 import random
 import re
+import time
 import xgboost as xgb
 
 
 #%%#################### original data
+start_time = time.time()
 # read train and test data from json
 traindf = pd.read_json("train.json")
 testdf = pd.read_json("test.json")
@@ -163,3 +165,6 @@ with open('predict_result_ensemble.csv', 'w') as csvfile:
     writer.writeheader()
     for key, value in predict_dict.iteritems():
         writer.writerow({'id': key, 'cuisine': value})
+
+print("--- %s seconds ---" % (time.time() - start_time))
+
