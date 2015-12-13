@@ -57,11 +57,11 @@ dtm_train = vectorizer.fit_transform(traindf['processed_ingredients_string'])
 dtm_test = vectorizer.transform(testdf['processed_ingredients_string'])
 
 
-##tf-idf transforming
-#tfidf_trans = TfidfTransformer()
-#tfidf_train = tfidf_trans.fit_transform(dtm_train).toarray()
-#tfidf_test = tfidf_trans.transform(dtm_test).toarray()
-#
+#tf-idf transforming
+tfidf_trans = TfidfTransformer()
+tfidf_train = tfidf_trans.fit_transform(dtm_train)
+tfidf_test = tfidf_trans.transform(dtm_test)
+
 ## 0-1 standardization
 #std_trans = StandardScaler()
 #std_train = std_trans.fit_transform(dtm_train)
@@ -73,26 +73,26 @@ dtm_test = vectorizer.transform(testdf['processed_ingredients_string'])
 #pca_test = pca.transform(dtm_test)
 #%%#################### xgboost parameter testing
 param = {
-   'objective':'multi:softmax',
+   'objective':'multi:softprob',
    'eta':0.09,
    'max_depth':5,
    'num_class':20
 }
 num_rounds = 2000
-clf = xgb.train(param, xgb.DMatrix(dtm_train, cuisine_label), num_rounds)
+clf = xgb.train(param, xgb.DMatrix(tfidf_train, cuisine_label), num_rounds)
 #%%#################### xgboost cv
-xgb.cv(param, xgb.DMatrix(dtm_train, cuisine_label), num_rounds, nfold=5,
-       metrics={'merror'}, seed = 0)
-predict_result = clf.predict(xgb.DMatrix(dtm_test))
+#xgb.cv(param, xgb.DMatrix(tfidf_train, cuisine_label), num_rounds, nfold=5,
+#       metrics={'merror'}, seed = 0)
+predict_result = clf.predict(xgb.DMatrix(tfidf_test)).reshape(9944, 20)
 #%%####################write csv
-testdf['cuisine'] = le.inverse_transform(predict_result.astype(np.int32))
-predict_dict = dict(zip(testdf['id'], testdf['cuisine']) )
-with open('predict_result_ensemble.csv', 'w') as csvfile:
-    fieldnames = ['id', 'cuisine']
-    writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
-
-    writer.writeheader()
-    for key, value in predict_dict.iteritems():
-        writer.writerow({'id': key, 'cuisine': value})
+#testdf['cuisine'] = le.inverse_transform(predict_result.astype(np.int32))
+#predict_dict = dict(zip(testdf['id'], testdf['cuisine']) )
+#with open('predict_result_ensemble.csv', 'w') as csvfile:
+#    fieldnames = ['id', 'cuisine']
+#    writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
+#
+#    writer.writeheader()
+#    for key, value in predict_dict.iteritems():
+#        writer.writerow({'id': key, 'cuisine': value})
 
 print("--- %s seconds ---" % (time.time() - start_time))

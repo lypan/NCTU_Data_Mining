@@ -1,0 +1,40 @@
+RandomForest Parameter
+Model with rank: 1
+Mean validation score: 0.764 (std: 0.002)
+Parameters: {'bootstrap': False, 'min_samples_leaf': 1, 'n_estimators': 275, 'min_samples_split': 3, 'criterion': 'gini', 'max_features': 43, 'max_depth': None}
+
+Model with rank: 2
+Mean validation score: 0.764 (std: 0.002)
+Parameters: {'bootstrap': False, 'min_samples_leaf': 1, 'n_estimators': 225, 'min_samples_split': 3, 'criterion': 'gini', 'max_features': 44, 'max_depth': None}
+
+Model with rank: 3
+Mean validation score: 0.764 (std: 0.001)
+Parameters: {'bootstrap': False, 'min_samples_leaf': 1, 'n_estimators': 300, 'min_samples_split': 3, 'criterion': 'gini', 'max_features': 42, 'max_depth': None}
+
+Model with rank: 1
+Mean validation score: 0.759 (std: 0.002)
+Parameters: {'bootstrap': False, 'min_samples_leaf': 1, 'n_estimators': 150, 'min_samples_split': 6, 'criterion': 'gini', 'max_features': 40, 'max_depth': None}
+
+Model with rank: 2
+Mean validation score: 0.757 (std: 0.001)
+Parameters: {'bootstrap': False, 'min_samples_leaf': 1, 'n_estimators': 100, 'min_samples_split': 5, 'criterion': 'gini', 'max_features': 33, 'max_depth': None}
+
+Model with rank: 3
+Mean validation score: 0.757 (std: 0.002)
+Parameters: {'bootstrap': False, 'min_samples_leaf': 1, 'n_estimators': 150, 'min_samples_split': 8, 'criterion': 'gini', 'max_features': 39, 'max_depth': None}
+
+Model with rank: 1
+Mean validation score: 0.757 (std: 0.002)
+Parameters: {'bootstrap': False, 'min_samples_leaf': 1, 'n_estimators': 150, 'min_samples_split': 2, 'criterion': 'gini', 'max_features': 14, 'max_depth': None}
+
+Model with rank: 1
+Mean validation score: 0.761 (std: 0.001)
+Parameters: {'bootstrap': False, 'min_samples_leaf': 1, 'n_estimators': 200, 'min_samples_split': 5, 'criterion': 'gini', 'max_features': 44, 'max_depth': None}
+
+Model with rank: 2
+Mean validation score: 0.761 (std: 0.001)
+Parameters: {'bootstrap': False, 'min_samples_leaf': 1, 'n_estimators': 150, 'min_samples_split': 5, 'criterion': 'gini', 'max_features': 42, 'max_depth': None}
+
+Model with rank: 3
+Mean validation score: 0.761 (std: 0.001)
+Parameters: {'bootstrap': False, 'min_samples_leaf': 1, 'n_estimators': 200, 'min_samples_split': 5, 'criterion': 'gini', 'max_features': 47, 'max_depth': None}

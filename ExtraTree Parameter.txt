@@ -1,0 +1,26 @@
+ExtraTree Parameter
+RandomizedSearchCV took 1517.84 seconds for 20 candidates parameter settings.
+Model with rank: 1
+Mean validation score: 0.765 (std: 0.003)
+Parameters: {'max_features': 6, 'n_estimators': 100, 'criterion': 'gini', 'max_depth': None}
+
+Model with rank: 2
+Mean validation score: 0.760 (std: 0.002)
+Parameters: {'max_features': 6, 'n_estimators': 70, 'criterion': 'gini', 'max_depth': None}
+
+Model with rank: 3
+Mean validation score: 0.759 (std: 0.003)
+Parameters: {'max_features': 7, 'n_estimators': 100, 'criterion': 'entropy', 'max_depth': None}
+
+RandomizedSearchCV took 967.37 seconds for 20 candidates parameter settings.
+Model with rank: 1
+Mean validation score: 0.748 (std: 0.002)
+Parameters: {'max_features': 1, 'n_estimators': 70, 'criterion': 'entropy', 'max_depth': None}
+
+Model with rank: 2
+Mean validation score: 0.744 (std: 0.003)
+Parameters: {'max_features': 3, 'n_estimators': 50, 'criterion': 'gini', 'max_depth': None}
+
+Model with rank: 3
+Mean validation score: 0.743 (std: 0.004)
+Parameters: {'max_features': 4, 'n_estimators': 50, 'criterion': 'entropy', 'max_depth': None}

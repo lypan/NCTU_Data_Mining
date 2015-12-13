@@ -62,17 +62,6 @@ dtm_test = vectorizer.transform(testdf['processed_ingredients_string']).toarray(
 # tfidf_train = tfidf_trans.fit_transform(dtm_train).toarray()
 # tfidf_test = tfidf_trans.transform(dtm_test).toarray()
 
-## 0-1 standardization
-#std_trans = StandardScaler()
-#std_train = std_trans.fit_transform(dtm_train)
-#std_test = std_trans.transform(dtm_test)
-#
-## PCA
-#pca = PCA(n_components=1000)
-#pca_train = pca.fit(dtm_train).transform(dtm_train)
-#pca_test = pca.transform(dtm_test)
-
-
 #%%####################level 1
 # cut train_data to train set and cv set
 spilt_number = 20000;
@@ -80,30 +69,23 @@ n_folds = 5;
 
 
 clf1 = RandomForestClassifier(bootstrap=False, min_samples_leaf=1, n_estimators=275, min_samples_split=3, criterion='gini', max_features=43, max_depth=None)
-# clf2 = RandomForestClassifier(n_estimators = 100, criterion = 'gini')
+# clf2 = RandomForestClassifier(bootstrap=False, min_samples_leaf=1, n_estimators=150, min_samples_split=6, criterion='gini', max_features=40, max_depth=None)
 clf3 = ExtraTreesClassifier(max_features=6, n_estimators=100, criterion='gini', max_depth=None)
-# clf4 = ExtraTreesClassifier(n_estimators = 100 * 2, criterion = 'gini')
-clf5 = KNeighborsClassifier(n_neighbors=16, weights='distance', leaf_size=178, algorithm='ball_tree')
-# clf6 = KNeighborsClassifier(n_neighbors = 380, metric = 'cosine', algorithm = 'brute')
-clf7 = MultinomialNB(alpha=0.4, fit_prior=True)
-# clf8 = MultinomialNB()
-num_rounds = 200
+# clf4 = ExtraTreesClassifier(max_features=1, n_estimators=70, criterion='entropy', max_depth=None)
+clf5 = LinearSVC(penalty='l2', C=0.2, tol=0.0001, dual=False)
+# clf6 = LinearSVC(penalty='l2', C=0.6, tol=0.01, dual=False)
+clf7 = LogisticRegression(penalty='l2', C=1, tol=0.0001, dual=False)
+# clf8 = LogisticRegression(penalty='l2', C=8, tol=0.01, dual=False)
+
+num_rounds = 2000
 param = {
    'objective':'multi:softmax',
-   'eta':0.3,
-   'max_depth':24,
-   'num_class':20,
-   'colsample_bytree':0.3,
-   'min_child_weight':1
+   'eta':0.09,
+   'max_depth':5,
+   'num_class':20
 }
 clf9 = xgb.train(param, xgb.DMatrix(dtm_train[:spilt_number], cuisine_label[:spilt_number]), num_rounds)
 # clf10 = xgb.train(param, xgb.DMatrix(tfidf_train[:spilt_number], cuisine_label[:spilt_number]), num_rounds)
-clf11 = LinearSVC(penalty='l2', C=0.2, dual=False)
-# clf12 = LinearSVC()
-clf13 = LogisticRegression(penalty='l2', C=1, dual=False)
-# clf14 = LogisticRegression()
-
-
 
 
 #%%
@@ -128,19 +110,19 @@ test_pred3 = clf3.predict(dtm_test)
 # train_pred4 = clf4.predict(tfidf_train[spilt_number:])
 # test_pred4 = clf4.predict(tfidf_test)
 #%%
-#knn on dtm
+#lsvc on dtm
 clf5.fit(dtm_train[:spilt_number], cuisine_label[:spilt_number])
 train_pred5 = clf5.predict(dtm_train[spilt_number:])
 test_pred5 = clf5.predict(dtm_test)
-# #knn on tfidf
+#lsvc on tfidf
 # clf6.fit(tfidf_train[:spilt_number], cuisine_label[:spilt_number])
 # train_pred6 = clf6.predict(tfidf_train[spilt_number:])
 # test_pred6 = clf6.predict(tfidf_test)
-#mb on dtm
+#lr on dtm
 clf7.fit(dtm_train[:spilt_number], cuisine_label[:spilt_number])
 train_pred7 = clf7.predict(dtm_train[spilt_number:])
 test_pred7 = clf7.predict(dtm_test)
-#mb on tfidf
+#lr on tfidf
 # clf8.fit(tfidf_train[:spilt_number], cuisine_label[:spilt_number])
 # train_pred8 = clf8.predict(tfidf_train[spilt_number:])
 # test_pred8 = clf8.predict(tfidf_test)
@@ -150,46 +132,30 @@ test_pred9 = clf9.predict(xgb.DMatrix(dtm_test))
 #xgb on tfidf
 # train_pred10 = clf10.predict(xgb.DMatrix(tfidf_train[spilt_number:]))
 # test_pred10 = clf10.predict(xgb.DMatrix(tfidf_test))
-clf11.fit(dtm_train[:spilt_number], cuisine_label[:spilt_number])
-train_pred11 = clf11.predict(dtm_train[spilt_number:])
-test_pred11 = clf11.predict(dtm_test)
 
-clf13.fit(dtm_train[:spilt_number], cuisine_label[:spilt_number])
-train_pred13 = clf13.predict(dtm_train[spilt_number:])
-test_pred13 = clf13.predict(dtm_test)
+
 #%%
-# blend_train = np.column_stack((train_pred1, train_pred2, train_pred3, train_pred4, train_pred5, train_pred6, train_pred7, train_pred8, train_pred9, train_pred10))
-# blend_test = np.column_stack((test_pred1, test_pred2, test_pred3, test_pred4, test_pred5, test_pred6, test_pred7, test_pred8, test_pred9, test_pred10))
-
-blend_train = np.column_stack((train_pred1, train_pred3, train_pred5, train_pred7, train_pred9, train_pred11, train_pred13))
-blend_test = np.column_stack((test_pred1, test_pred3, test_pred5, test_pred7, test_pred9, test_pred11, test_pred13))
+blend_train = np.column_stack((train_pred1, train_pred3, train_pred5, train_pred7, train_pred9))
+blend_test = np.column_stack((test_pred1, test_pred3, test_pred5, test_pred7, test_pred9))
 
 #%%####################level 2
 param = {
    'objective':'multi:softmax',
-   'eta':0.3,
-   'max_depth':24,
-   'num_class':20,
-   'colsample_bytree':0.3,
-   'min_child_weight':1
+   'eta':0.09,
+   'max_depth':5,
+   'num_class':20
 }
-evals_result = {}
-num_rounds = 200
-
-l2_row_num = blend_train.shape[0]
-l2_row_spl = int(l2_row_num * 0.8)
+num_rounds = 2000
 
 
-dtrain = xgb.DMatrix(blend_train[:l2_row_spl], cuisine_label[spilt_number:spilt_number + l2_row_spl])
-deval = xgb.DMatrix(blend_train[l2_row_spl:], cuisine_label[spilt_number + l2_row_spl:])
+dtrain = xgb.DMatrix(blend_train, cuisine_label[spilt_number:])
 dtest = xgb.DMatrix(blend_test)
-watchlist = [(dtrain,'train'), (deval,'eval')]
 
-xgbclf = xgb.train(param, dtrain, num_rounds, watchlist, early_stopping_rounds=50, evals_result=evals_result)
-predict_result = xgbclf.predict(dtest, ntree_limit=xgbclf.best_iteration)
+xgbclf = xgb.train(param, dtrain, num_rounds)
+predict_result = xgbclf.predict(dtest)
 #%%####################write csv
 testdf['cuisine'] = le.inverse_transform(predict_result.astype(np.int32))
-predict_dict = dict(zip(testdf['id'], testdf['cuisine']) )
+predict_dict = dict(zip(testdf['id'], testdf['cuisine']))
 with open('predict_result_ensemble.csv', 'w') as csvfile:
     fieldnames = ['id', 'cuisine']
     writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
