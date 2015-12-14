@@ -4,6 +4,8 @@ Created on Tue Dec  1 15:00:35 2015
 
 @author: liangyupan
 """
+from sklearn import svm
+from sklearn.svm import SVC
 from sklearn.decomposition import PCA
 from sklearn.preprocessing import StandardScaler
 from sklearn import preprocessing
@@ -173,6 +175,29 @@ param_dist = {"C": [0.2, 0.4, 0.6, 0.8, 1, 1.5, 2, 4, 8],
               "tol":[1e-2, 1e-3, 1e-4]}
 # run randomized search
 n_iter_search = 54
+random_search = RandomizedSearchCV(clf, param_distributions=param_dist,
+                                   n_iter=n_iter_search)
+
+# DTM
+start = time()
+random_search.fit(dtm_train, cuisine_label)
+print("RandomizedSearchCV took %.2f seconds for %d candidates"
+      " parameter settings." % ((time() - start), n_iter_search))
+report(random_search.grid_scores_)
+
+# TF-IDF
+start = time()
+random_search.fit(tfidf_train, cuisine_label)
+print("RandomizedSearchCV took %.2f seconds for %d candidates"
+      " parameter settings." % ((time() - start), n_iter_search))
+report(random_search.grid_scores_)
+#%%
+clf = SVC()
+# specify parameters and distributions to sample from
+param_dist = {"C": [0.2, 0.4, 0.6, 0.8, 1, 1.5, 2, 4, 8],
+              "tol":[1e-2, 1e-3, 1e-4]}
+# run randomized search
+n_iter_search = 18
 random_search = RandomizedSearchCV(clf, param_distributions=param_dist,
                                    n_iter=n_iter_search)
 
