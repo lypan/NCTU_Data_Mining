@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 """
 Created on Mon Dec 14 04:54:45 2015
-
 @author: lypan
 """
 
@@ -19,6 +18,7 @@ from sklearn.neighbors import KNeighborsClassifier
 from sklearn.preprocessing import LabelEncoder
 from sklearn.preprocessing import StandardScaler
 from sklearn.svm import LinearSVC
+from sklearn.linear_model import SGDClassifier
 import csv
 import numpy as np
 import pandas as pd
@@ -70,7 +70,8 @@ clf1 = RandomForestClassifier(bootstrap=False, min_samples_leaf=1, n_estimators=
 # clf2 = RandomForestClassifier(bootstrap=False, min_samples_leaf=1, n_estimators=150, min_samples_split=6, criterion='gini', max_features=40, max_depth=None)
 clf3 = ExtraTreesClassifier(max_features=6, n_estimators=100, criterion='gini', max_depth=None)
 # clf4 = ExtraTreesClassifier(max_features=1, n_estimators=70, criterion='entropy', max_depth=None)
-clf5 = LinearSVC(penalty='l2', C=0.2, tol=0.0001, dual=False)
+#clf5 = LinearSVC(penalty='l2', C=0.2, tol=0.0001, dual=False)
+clf5 = SGDClassifier(penalty='l2', loss='modified_huber')
 # clf6 = LinearSVC(penalty='l2', C=0.6, tol=0.01, dual=False)
 clf7 = LogisticRegression(penalty='l2', C=1, tol=0.0001, dual=False)
 # clf8 = LogisticRegression(penalty='l2', C=8, tol=0.01, dual=False)
