@@ -100,14 +100,14 @@ for j, clf in enumerate(clfs):
         # This output will be the basis for our blended classifier to train against,
         # which is also the output of our classifiers
         blend_train[cv_index, j] = clf.predict(X_cv)
-        blend_test_j[:, i] = clf.predict(X_test)
+        blend_test_j[:, i] = clf.predict(dtm_test)
     # Take the mean of the predictions of the cross validation set
     blend_test[:, j] = blend_test_j.mean(1)
 #%%
 # Start blending!
 bclf = LogisticRegression()
 bclf.fit(blend_train, cuisine_label)
-predict_result = clf7.predict(blend_test)
+predict_result = bclf.predict(blend_test)
 #%%####################write csv
 testdf['cuisine'] = le.inverse_transform(predict_result.astype(np.int32))
 predict_dict = dict(zip(testdf['id'], testdf['cuisine']))
