@@ -1,0 +1,52 @@
+SGDClassifier
+RandomizedSearchCV took 20.07 seconds for 15 candidates parameter settings.
+Model with rank: 1
+Mean validation score: 0.763 (std: 0.006)
+Parameters: {'penalty': 'l2', 'loss': 'log'}
+
+Model with rank: 2
+Mean validation score: 0.746 (std: 0.002)
+Parameters: {'penalty': 'l2', 'loss': 'hinge'}
+
+Model with rank: 3
+Mean validation score: 0.745 (std: 0.001)
+Parameters: {'penalty': 'none', 'loss': 'hinge'}
+
+RandomizedSearchCV took 19.16 seconds for 15 candidates parameter settings.
+Model with rank: 1
+Mean validation score: 0.782 (std: 0.001)
+Parameters: {'penalty': 'l2', 'loss': 'modified_huber'}
+
+Model with rank: 2
+Mean validation score: 0.780 (std: 0.001)
+Parameters: {'penalty': 'none', 'loss': 'log'}
+
+Model with rank: 3
+Mean validation score: 0.775 (std: 0.002)
+Parameters: {'penalty': 'none', 'loss': 'hinge'}
+
+RandomizedSearchCV took 106.52 seconds for 50 candidates parameter settings.
+Model with rank: 1
+Mean validation score: 0.770 (std: 0.000)
+Parameters: {'penalty': 'elasticnet', 'l1_ratio': 0.1, 'loss': 'log'}
+
+Model with rank: 2
+Mean validation score: 0.768 (std: 0.001)
+Parameters: {'penalty': 'elasticnet', 'l1_ratio': 0.5, 'loss': 'log'}
+
+Model with rank: 3
+Mean validation score: 0.768 (std: 0.001)
+Parameters: {'penalty': 'elasticnet', 'l1_ratio': 0.2, 'loss': 'log'}
+
+RandomizedSearchCV took 102.93 seconds for 50 candidates parameter settings.
+Model with rank: 1
+Mean validation score: 0.782 (std: 0.002)
+Parameters: {'penalty': 'elasticnet', 'l1_ratio': 0.1, 'loss': 'modified_huber'}
+
+Model with rank: 2
+Mean validation score: 0.781 (std: 0.001)
+Parameters: {'penalty': 'elasticnet', 'l1_ratio': 0.2, 'loss': 'modified_huber'}
+
+Model with rank: 3
+Mean validation score: 0.781 (std: 0.001)
+Parameters: {'penalty': 'elasticnet', 'l1_ratio': 0.3, 'loss': 'modified_huber'}
