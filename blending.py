@@ -48,7 +48,7 @@ testdf['processed_ingredients_string'] = [','.join(z).strip() for z in testdf['p
 le = preprocessing.LabelEncoder()
 le.fit(traindf['cuisine'])
 traindf['cuisine_number'] = le.transform(traindf['cuisine'])
-random.shuffle(traindf)
+traindf = traindf.iloc[np.random.permutation(len(traindf))]
 cuisine_label = traindf['cuisine_number']
 #%%#################### data preprocessing
 # Document term matrix
@@ -88,23 +88,36 @@ for j, clf in enumerate(clfs):
     blend_test_j = np.zeros((dtm_test.shape[0], len(skf))) # Number of testing data x Number of folds , we will take the mean of the predictions later
     for i, (train_index, cv_index) in enumerate(skf):
         print 'Fold [%s]' % (i)
-        
+
         # This is the training and validation set
         X_train = dtm_train[train_index]
         Y_train = cuisine_label[train_index]
         X_cv = dtm_train[cv_index]
         Y_cv = cuisine_label[cv_index]
-        
+
         clf.fit(X_train, Y_train)
-        
+
         # This output will be the basis for our blended classifier to train against,
         # which is also the output of our classifiers
         blend_train[cv_index, j] = clf.predict(X_cv)
         blend_test_j[:, i] = clf.predict(X_test)
     # Take the mean of the predictions of the cross validation set
     blend_test[:, j] = blend_test_j.mean(1)
-    
+#%%
 # Start blending!
 bclf = LogisticRegression()
 bclf.fit(blend_train, cuisine_label)
-    
+predict_result = clf7.predict(blend_test)
+#%%####################write csv
+testdf['cuisine'] = le.inverse_transform(predict_result.astype(np.int32))
+predict_dict = dict(zip(testdf['id'], testdf['cuisine']))
+with open('predict_result_ensemble.csv', 'w') as csvfile:
+    fieldnames = ['id', 'cuisine']
+    writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
+
+    writer.writeheader()
+    for key, value in predict_dict.iteritems():
+        writer.writerow({'id': key, 'cuisine': value})
+
+print("--- %s seconds ---" % (time.time() - start_time))
+
