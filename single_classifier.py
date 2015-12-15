@@ -58,9 +58,9 @@ dtm_test = vectorizer.transform(testdf['processed_ingredients_string'])
 
 
 #tf-idf transforming
-tfidf_trans = TfidfTransformer()
-tfidf_train = tfidf_trans.fit_transform(dtm_train)
-tfidf_test = tfidf_trans.transform(dtm_test)
+#tfidf_trans = TfidfTransformer()
+#tfidf_train = tfidf_trans.fit_transform(dtm_train)
+#tfidf_test = tfidf_trans.transform(dtm_test)
 
 ## 0-1 standardization
 #std_trans = StandardScaler()
@@ -71,6 +71,10 @@ tfidf_test = tfidf_trans.transform(dtm_test)
 #pca = PCA(n_components=1000)
 #pca_train = pca.fit(dtm_train).transform(dtm_train)
 #pca_test = pca.transform(dtm_test)
+#%%
+clf11 = KNeighborsClassifier(n_neighbors=17, weights='distance', algorithm='auto', leaf_size=220)
+clf11.fit(dtm_train, cuisine_label)
+test_pred11 = clf11.predict_proba(dtm_test).reshape(9944, 20)
 #%%#################### xgboost parameter testing
 param = {
    'objective':'multi:softprob',
