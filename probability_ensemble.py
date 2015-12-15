@@ -151,6 +151,7 @@ test_pred14 = clf14.predict_proba(tfidf_test).reshape(9944, 20)
 #%%
 blend_prob = test_pred1 + test_pred2 + test_pred3 + test_pred4 + test_pred5 + test_pred6 + test_pred7 + test_pred8 + test_pred9 + test_pred10 + test_pred11 + test_pred12 + test_pred13 + test_pred14
 
+
 predict_result = np.argmax(blend_prob, axis=1) 
 #%%
 testdf['cuisine'] = le.inverse_transform(predict_result.astype(np.int32))
