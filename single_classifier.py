@@ -13,6 +13,7 @@ import time
 import pandas as pd
 import numpy as np
 import xgboost as xgb
+from sklearn.externals import joblib
 from sklearn import preprocessing
 from sklearn.decomposition import PCA
 from sklearn.cross_validation import StratifiedKFold
@@ -26,6 +27,8 @@ from sklearn.ensemble import ExtraTreesClassifier
 from sklearn.ensemble import GradientBoostingClassifier
 from sklearn.naive_bayes import MultinomialNB
 from sklearn.neighbors import KNeighborsClassifier
+#%%
+#clf = joblib.load('model.pkl') 
 #%%#################### original data
 # read train and test data from json
 start_time = time.time()
@@ -72,9 +75,14 @@ dtm_test = vectorizer.transform(testdf['processed_ingredients_string'])
 #pca_train = pca.fit(dtm_train).transform(dtm_train)
 #pca_test = pca.transform(dtm_test)
 #%%
-clf11 = KNeighborsClassifier(n_neighbors=17, weights='distance', algorithm='auto', leaf_size=220)
-clf11.fit(dtm_train, cuisine_label)
-test_pred11 = clf11.predict_proba(dtm_test).reshape(9944, 20)
+#clf = RandomForestClassifier(n_estimators=10)
+#clf.fit(dtm_train, cuisine_label)
+test_pred = clf.predict_proba(dtm_test).reshape(9944, 20)
+#%%
+joblib.dump(clf, 'model.pkl') 
+np.save("predict", test_pred)
+#%%
+a = np.load("predict.npy")
 #%%#################### xgboost parameter testing
 param = {
    'objective':'multi:softprob',
