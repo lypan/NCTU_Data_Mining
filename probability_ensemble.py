@@ -119,12 +119,12 @@ test_pred9 = clf9.predict(xgb.DMatrix(dtm_test)).reshape(9944, 20)
 #xgb on tfidf
 # test_pred10 = clf10.predict(xgb.DMatrix(tfidf_test)).reshape(9944, 20)
 clf11.fit(dtm_train, cuisine_label)
-test_pred11 = clf11.predict_proba(dtm_test).reshape(9944, 20)
+#test_pred11 = clf11.predict_proba(dtm_test).reshape(9944, 20)
 clf12.fit(dtm_train, cuisine_label)
 test_pred12 = clf12.predict_proba(dtm_test).reshape(9944, 20)
 
 #%%
-blend_prob = test_pred1 + test_pred3 + test_pred5 + test_pred7 + test_pred9 + test_pred11 + test_pred12
+blend_prob = test_pred1 + test_pred3 + test_pred5 + test_pred7 + test_pred9 + test_pred12
 predict_result = np.argmax(blend_prob, axis=1) 
 #%%
 testdf['cuisine'] = le.inverse_transform(predict_result.astype(np.int32))
