@@ -1,0 +1,30 @@
+Performing grid search...
+pipeline: ['vect', 'tfidf', 'clf']
+parameters:
+{'clf__n_estimators': [25],
+ 'tfidf__norm': ['l1', 'l2'],
+ 'tfidf__use_idf': [True, False],
+ 'vect__max_df': [0.5, 0.7, 0.9],
+ 'vect__max_features': [None, 2000, 4000],
+ 'vect__min_df': [0.01, 0.05, 0.1, 0.2],
+ 'vect__ngram_range': [(1, 1), (1, 2)],
+ 'vect__stop_words': [None, 'english']}
+Fitting 3 folds for each of 576 candidates, totalling 1728 fits
+[Parallel(n_jobs=-1)]: Done  34 tasks      | elapsed:  1.3min
+[Parallel(n_jobs=-1)]: Done 184 tasks      | elapsed:  6.2min
+[Parallel(n_jobs=-1)]: Done 434 tasks      | elapsed: 14.8min
+[Parallel(n_jobs=-1)]: Done 784 tasks      | elapsed: 26.3min
+[Parallel(n_jobs=-1)]: Done 1234 tasks      | elapsed: 41.7min
+[Parallel(n_jobs=-1)]: Done 1728 out of 1728 | elapsed: 287.9min finished
+done in 17293.859s
+
+Best score: 0.700
+Best parameters set:
+	clf__n_estimators: 25
+	tfidf__norm: 'l1'
+	tfidf__use_idf: False
+	vect__max_df: 0.9
+	vect__max_features: None
+	vect__min_df: 0.01
+	vect__ngram_range: (1, 1)
+	vect__stop_words: None
