@@ -85,7 +85,8 @@ param = {
 }
 clf9 = xgb.train(param, xgb.DMatrix(dtm_train, cuisine_label), num_rounds)
 # clf10 = xgb.train(param, xgb.DMatrix(tfidf_train, cuisine_label), num_rounds)
-
+clf11 = KNeighborsClassifier(n_neighbors=17, weights='distance', algorithm='auto', leaf_size=220)
+clf12 = MultinomialNB(alpha=0.05, fit_prior=True)
 
 #%%
 #rf on dtm
@@ -117,10 +118,13 @@ test_pred7 = clf7.predict_proba(dtm_test).reshape(9944, 20)
 test_pred9 = clf9.predict(xgb.DMatrix(dtm_test)).reshape(9944, 20)
 #xgb on tfidf
 # test_pred10 = clf10.predict(xgb.DMatrix(tfidf_test)).reshape(9944, 20)
-
+clf11.fit(dtm_train, cuisine_label)
+test_pred11 = clf11.predict_proba(dtm_test).reshape(9944, 20)
+clf12.fit(dtm_train, cuisine_label)
+test_pred12 = clf12.predict_proba(dtm_test).reshape(9944, 20)
 
 #%%
-blend_prob = test_pred1 + test_pred3 + test_pred5 + test_pred7 + test_pred9 
+blend_prob = test_pred1 + test_pred3 + test_pred5 + test_pred7 + test_pred9 + test_pred11 + test_pred12
 predict_result = np.argmax(blend_prob, axis=1) 
 #%%
 testdf['cuisine'] = le.inverse_transform(predict_result.astype(np.int32))
