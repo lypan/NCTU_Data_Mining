@@ -28,6 +28,9 @@ from sklearn.ensemble import GradientBoostingClassifier
 from sklearn.naive_bayes import MultinomialNB
 from sklearn.neighbors import KNeighborsClassifier
 #%%
+a = np.zeros((5,5))
+b = range(2)
+a[1:3,1:3] = -1
 #clf = joblib.load('model.pkl') 
 #%%#################### original data
 # read train and test data from json
@@ -61,9 +64,9 @@ dtm_test = vectorizer.transform(testdf['processed_ingredients_string'])
 
 
 #tf-idf transforming
-#tfidf_trans = TfidfTransformer()
-#tfidf_train = tfidf_trans.fit_transform(dtm_train)
-#tfidf_test = tfidf_trans.transform(dtm_test)
+tfidf_trans = TfidfTransformer()
+tfidf_train = tfidf_trans.fit_transform(dtm_train)
+tfidf_test = tfidf_trans.transform(dtm_test)
 
 ## 0-1 standardization
 #std_trans = StandardScaler()
@@ -74,15 +77,17 @@ dtm_test = vectorizer.transform(testdf['processed_ingredients_string'])
 #pca = PCA(n_components=1000)
 #pca_train = pca.fit(dtm_train).transform(dtm_train)
 #pca_test = pca.transform(dtm_test)
+
 #%%
-#clf = RandomForestClassifier(n_estimators=10)
-#clf.fit(dtm_train, cuisine_label)
-test_pred = clf.predict_proba(dtm_test).reshape(9944, 20)
-#%%
-joblib.dump(clf, 'model.pkl') 
-np.save("predict", test_pred)
-#%%
-a = np.load("predict.npy")
+n_folds = 2
+class_number = 20
+
+skf = list(StratifiedKFold(cuisine_label, n_folds, shuffle=True, random_state=True))
+train_index = skf[0][0]
+cv_index = skf[0][1]
+a = np.ones((3,3))
+b = np.ones((3,3)) * 4
+c = np.column_stack((a, b))
 #%%#################### xgboost parameter testing
 param = {
    'objective':'multi:softprob',
