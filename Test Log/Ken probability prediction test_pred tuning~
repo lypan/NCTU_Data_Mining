@@ -1,0 +1,8 @@
+Dec 18:
+- test 06 -> accuracy: 0.80742:  blend_prob = test_pred2 + test_pred4 + 1.2*test_pred8 + 1.1*test_pred10 
+- based on the correlation between each classifier, the logistic has a relatively high relation with SGD raw, so probabily be best if uing only one of these two in the blend_prob calculation
+
+
+So far, the best score is 0.81124
+	- blend_prob = test_pred1 + test_pred2 + test_pred3 + test_pred4 + test_pred5 + test_pred6 + 1.5*test_pred7 + 1.5*test_pred8 + 1.5*test_pred9 + 1.5*test_pred10 
+	
